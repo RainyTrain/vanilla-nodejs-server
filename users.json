@@ -1,1 +1,5 @@
-{ "users": [] }
+{
+  "users": [
+    { "id": "1", "name": "QwertyUpdate", "age": 11, "hobbies": ["tennis"] }
+  ]
+}

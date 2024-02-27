@@ -2,14 +2,17 @@ import http from "http";
 import EventEmitter from "events";
 import { Methods } from "./router";
 import "dotenv/config";
+import { Request, Response } from "../helpers/types/types";
 
 export class App {
   server: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>;
   emitter: EventEmitter;
+  middleware: Array<(...args: any[]) => Promise<unknown>>;
 
   constructor() {
     this.server = this.createServer();
     this.emitter = new EventEmitter();
+    this.middleware = [];
   }
 
   addRoruter(router: any) {
@@ -19,7 +22,7 @@ export class App {
         const handler = route[method];
         this.emitter.on(
           this.getRouteMask(method as Methods, path),
-          (req: http.IncomingMessage, res: http.OutgoingMessage) => {
+          (req: Request, res: Response) => {
             handler(req, res);
           },
         );
@@ -32,20 +35,25 @@ export class App {
   }
 
   private createServer() {
-    return http.createServer(
-      (req: http.IncomingMessage, res: http.OutgoingMessage) => {
-        const emmited = this.emitter.emit(
-          this.getRouteMask(req.method?.toUpperCase() as Methods, req.url!),
-          req,
-          res,
-        );
+    return http.createServer(async (req: Request, res: Response) => {
+      await Promise.all(this.middleware.map((handler) => handler(req, res)));
 
-        if (!emmited) {
-          res.write("Path does not exist");
-          res.end();
-        }
-      },
-    );
+      console.log(req.path);
+      const emmited = this.emitter.emit(
+        this.getRouteMask(req.method?.toUpperCase() as Methods, req.path!),
+        req,
+        res,
+      );
+
+      if (!emmited) {
+        res.write("Path does not exist");
+        res.end();
+      }
+    });
+  }
+
+  use(handler: (...args: any[]) => Promise<void>) {
+    this.middleware.push(handler);
   }
 
   listenServer() {
