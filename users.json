@@ -1,5 +1,11 @@
 {
   "users": [
-    { "id": "1", "name": "QwertyUpdate", "age": 11, "hobbies": ["tennis"] }
+    {
+      "id": "2",
+      "name": "Zxcvbn",
+      "age": 23,
+      "hobbies": ["football", "basketball"]
+    },
+    { "id": "1", "name": "Qwerty", "age": 40, "hobbies": ["tennis"] }
   ]
 }

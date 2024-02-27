@@ -3,16 +3,13 @@ import path from "path";
 import { EditUserDto, UserDto } from "../../helpers/types/types";
 
 const db = JSON.parse(
-  fs.readFileSync(path.resolve(__dirname, "..", "..", "..", "users.json"), {
+  fs.readFileSync(path.resolve("users.json"), {
     encoding: "utf-8",
   }),
 );
 
 const writeToFile = (data: string) => {
-  return fs.writeFileSync(
-    path.resolve(__dirname, "..", "..", "..", "users.json"),
-    data,
-  );
+  return fs.writeFileSync(path.resolve("users.json"), data);
 };
 
 export class UserService {

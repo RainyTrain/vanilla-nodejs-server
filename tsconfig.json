@@ -5,7 +5,8 @@
     "moduleResolution": "Node",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "strict": true
+    "strict": true,
+    "baseUrl": "/"
   },
   "include": ["./**/*.ts"]
 }
