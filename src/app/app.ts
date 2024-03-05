@@ -38,7 +38,7 @@ export class App {
     return http.createServer(async (req: Request, res: Response) => {
       await Promise.all(this.middleware.map((handler) => handler(req, res)));
 
-      console.log(req.path);
+      console.log(req.path, "path", req.body);
       const emmited = this.emitter.emit(
         this.getRouteMask(req.method?.toUpperCase() as Methods, req.path!),
         req,
@@ -56,11 +56,11 @@ export class App {
     this.middleware.push(handler);
   }
 
-  listenServer() {
-    const port = process.env.PORT || 4000;
+  listenServer(port?: number | string) {
+    const serverPort = port ?? (process.env.PORT || 4000);
 
-    return this.server.listen(port, () => {
-      console.log("I'm alive!", port);
+    return this.server.listen(serverPort, () => {
+      console.log("I'm alive!", serverPort);
     });
   }
 }
